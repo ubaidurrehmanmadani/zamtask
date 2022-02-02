@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Hash;
+use App\Notifications\UserNotification;
 
 class HomeController extends Controller
 {
@@ -24,14 +27,23 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
-    }
+    }  
 
-    public function adminHome(){
-        return view('adminHome');
-    }
+    public function addUser(Request $request)
+    {        
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => app('hash')->make('123456'),
+            'role' => User::USER_ROLE
+        ]);
 
+        $user->notify(new UserNotification(new User));
 
-    public function editorHome(){
-        return view('editorHome');
-    }
+        if($user){
+            return redirect('home')->with('success','User Created Sucessfully');
+        }else{
+            return redirect('home')->with('error','User Creation Failed');
+        }
+    } 
 }

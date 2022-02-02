@@ -21,8 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_admin'
+        'is_admin',
+        'role'
     ];
+    const ADMIN_ROLE = 1;
+    const USER_ROLE = 0;
+    const EDITOR_ROLE = 2;
 
     /**
      * The attributes that should be hidden for serialization.
